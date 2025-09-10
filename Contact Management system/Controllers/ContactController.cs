@@ -49,11 +49,16 @@ namespace Contact_Management_system.Controllers
             var data = _contactManager.GetUserAddressBook(int.Parse(userid!), pageNumber, pageSize);
             return Ok(data);
         }
-        
-        [HttpGet("GetContactbyId")]
-        public ActionResult<readContactDto> GetContact([FromQuery]int contactId) {
+
+        [HttpGet("{contactId:int}")]
+        public ActionResult<readContactDto> GetContact([FromRoute] int contactId)
+        {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var contact = _contactManager.GetContactbyId(int.Parse(userId!), contactId);
+
+            if (contact is null)
+                return NotFound("Contact not found for this user.");
+
             return Ok(contact);
         }
 

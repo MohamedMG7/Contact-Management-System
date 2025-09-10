@@ -34,11 +34,9 @@ namespace Contact_Management_system
         }
         public bool ValidatePhoneNumber(string phoneNumber)
         {
-            if (string.IsNullOrWhiteSpace(phoneNumber))
-                return false;
-
-            if (!Regex.IsMatch(phoneNumber, @"^\d+$"))
-                return false;
+            if (string.IsNullOrWhiteSpace(phoneNumber))return false;
+            if (phoneNumber.Length < 8) return false;
+            if (!Regex.IsMatch(phoneNumber, @"^\d+$"))return false;
 
             return true;
         }

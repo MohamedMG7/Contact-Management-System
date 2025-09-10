@@ -70,19 +70,19 @@ namespace Contact_Management_system.Controllers
 
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-            try
+            if (!_validations.IsValidEmail(dto.email))
             {
-                var updated = _contactManager.UpdateContact(dto, int.Parse(userId!));
-                return Ok(updated);
+                return BadRequest("not valid email");
             }
-            catch (ArgumentException ex)
+            if (!_validations.ValidatePhoneNumber(dto.phoneNumber))
             {
-                return BadRequest(ex.Message);
+                return BadRequest("phone number should only be numbers - more than 7 numbers");
             }
-            catch (KeyNotFoundException)
-            {
-                return NotFound("Contact not found for this user/phone.");
-            }
+
+            
+             var updated = _contactManager.UpdateContact(dto, int.Parse(userId!));
+             return Ok(updated);
+            
         }
 
         [HttpDelete("{contactId:int}")]

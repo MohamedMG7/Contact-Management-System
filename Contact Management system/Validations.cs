@@ -32,5 +32,15 @@ namespace Contact_Management_system
 
             return "Valid";
         }
+        public bool ValidatePhoneNumber(string phoneNumber)
+        {
+            if (string.IsNullOrWhiteSpace(phoneNumber))
+                return false;
+
+            if (!Regex.IsMatch(phoneNumber, @"^\d+$"))
+                return false;
+
+            return true;
+        }
     }
 }

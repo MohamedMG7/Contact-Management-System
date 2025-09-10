@@ -13,11 +13,13 @@ namespace Contact_Management_system.Controllers
     public class ContactsController : ControllerBase
     {
         private readonly IContactManager _contactManager;
+        private readonly Validations _validations;
         
 
-        public ContactsController(IContactManager contactManager)
+        public ContactsController(IContactManager contactManager, Validations validations)
         {
             _contactManager = contactManager;
+            _validations = validations;
         }
 
         [HttpPost]
@@ -25,7 +27,9 @@ namespace Contact_Management_system.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(new addContactResponseDto(false, "Invalid payload."));
-            
+
+            if (!_validations.ValidatePhoneNumber(data.phonenumber)) return BadRequest("Phone Number should be all numbers");
+
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var result = _contactManager.AddContact(data, int.Parse(userId!));
 

@@ -17,6 +17,7 @@ namespace Contact_Management_system.Managers
     public class ContactManager : IContactManager
     {
         private readonly ApplicationDbContext _context;
+       
 
         public ContactManager(ApplicationDbContext context)
         {
@@ -41,13 +42,11 @@ namespace Contact_Management_system.Managers
 
             // check if the user already has this contact in his book
             bool duplicate = _context.Set<Contact>().Where(c => c.ApplicationUserId == userId)
-        .   Any(c =>
-                (!string.IsNullOrEmpty(data.email) && c.EmailAddress == data.email) ||
-                (!string.IsNullOrEmpty(data.phonenumber) && c.PhoneNumber == data.phonenumber)
+        .   Any(c =>(!string.IsNullOrEmpty(data.phonenumber) && c.PhoneNumber == data.phonenumber)
             );
 
             if (duplicate)
-                return new addContactResponseDto(false, message:"Contact with same email or phone already exists for this user.");
+                return new addContactResponseDto(false, message:"Contact with same phone already exists for this user.");
 
             var entity = new Contact
             {
@@ -96,8 +95,8 @@ namespace Contact_Management_system.Managers
         {
             if (contactId <= 0 || userId <= 0) throw new ArgumentException("Invalid Input");
 
-            var contact = _context.Set<Contact>().AsNoTracking().Where(c => c.Id == contactId).Select( c=> new readContactDto
-            (
+            var contact = _context.Set<Contact>().AsNoTracking().Where(c => c.Id == contactId && c.ApplicationUserId == userId)
+                .Select( c=> new readContactDto(
                 c.FullName,
                 c.PhoneNumber,
                 c.EmailAddress,

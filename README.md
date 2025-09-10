@@ -18,7 +18,7 @@
 
 -git clone https://github.com/MohamedMG7/Contact-Management-System.git
 
--cd <repo folder>
+-cd repo folder
 
 -dotnet restore
 
